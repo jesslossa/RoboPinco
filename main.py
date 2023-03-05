@@ -1,8 +1,9 @@
 """
-Copyright © Krypton 2019-2023 - https://github.com/kkrypt0nn (https://krypton.ninja)
-Description:
-🐍 A simple template to start to code your own and personalized discord bot in Python programming language.
+RoboPinco Discord Bot 
+This bot was made to be used on the Discord Server "Molang Hangout ♡ — Emotes and Pfps". It was personalized for using on this server, to make the server tasks easier and implement personalized commands and games.
 
+The bot was constructed based on the template built by:
+Copyright © Krypton 2019-2023 - https://github.com/kkrypt0nn (https://krypton.ninja)
 Version: 5.5.0
 """
 
