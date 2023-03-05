@@ -14,6 +14,7 @@ import os
 import platform
 import random
 import sys
+import requests
 
 import aiosqlite
 import discord
@@ -33,9 +34,11 @@ Setup bot intents (events restrictions)
 For more information about intents, please go to the following websites:
 https://discordpy.readthedocs.io/en/latest/intents.html
 https://discordpy.readthedocs.io/en/latest/intents.html#privileged-intents
+"""
 
+intents = discord.Intents.default()
 
-Default Intents:
+# Default Intents
 intents.bans = True
 intents.dm_messages = True
 intents.dm_reactions = True
@@ -55,13 +58,11 @@ intents.typing = True
 intents.voice_states = True
 intents.webhooks = True
 
-Privileged Intents (Needs to be enabled on developer portal of Discord), please use them only if you need them:
+# Privileged Intents (Needs to be enabled on developer portal of Discord), please use them only if you need them:
 intents.members = True
 intents.message_content = True
 intents.presences = True
-"""
 
-intents = discord.Intents.default()
 
 """
 Uncomment this if you want to use prefix (normal) commands.
@@ -150,6 +151,24 @@ The config is available using the following code:
 """
 bot.config = config
 
+# API functions
+
+def get_quote():
+  response = requests.get("https://zenquotes.io/api/random")
+  json_data = json.loads(response.text)
+  quote = json_data[0]['q'] + " -" + json_data[0]['a']
+  return(quote)
+
+
+# Bot commands
+
+@bot.command(name='inspire')
+async def inspire(ctx):
+    quote = get_quote()
+    await ctx.send(quote)
+
+
+# Bot events
 
 @bot.event
 async def on_ready() -> None:
