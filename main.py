@@ -14,6 +14,7 @@ import os
 import platform
 import random
 import sys
+import requests
 
 import aiosqlite
 import discord
@@ -33,9 +34,10 @@ Setup bot intents (events restrictions)
 For more information about intents, please go to the following websites:
 https://discordpy.readthedocs.io/en/latest/intents.html
 https://discordpy.readthedocs.io/en/latest/intents.html#privileged-intents
+"""
 
+intents = discord.Intents.default()
 
-Default Intents:
 intents.bans = True
 intents.dm_messages = True
 intents.dm_reactions = True
@@ -55,13 +57,10 @@ intents.typing = True
 intents.voice_states = True
 intents.webhooks = True
 
-Privileged Intents (Needs to be enabled on developer portal of Discord), please use them only if you need them:
+# Privileged Intents (Needs to be enabled on developer portal of Discord), please use them only if you need them:
 intents.members = True
 intents.message_content = True
 intents.presences = True
-"""
-
-intents = discord.Intents.default()
 
 """
 Uncomment this if you want to use prefix (normal) commands.
@@ -69,7 +68,7 @@ It is recommended to use slash commands and therefore not use prefix commands.
 
 If you want to use prefix commands, make sure to also enable the intent below in the Discord developer portal.
 """
-# intents.message_content = True
+intents.message_content = True
 
 bot = Bot(
     command_prefix=commands.when_mentioned_or(config["prefix"]),
@@ -129,6 +128,11 @@ logger.addHandler(console_handler)
 logger.addHandler(file_handler)
 bot.logger = logger
 
+def get_quote():
+  response = requests.get("https://zenquotes.io/api/random")
+  json_data = json.loads(response.text)
+  quote = json_data[0]['q'] + " -" + json_data[0]['a']
+  return(quote)
 
 async def init_db():
     async with aiosqlite.connect(
@@ -150,9 +154,17 @@ The config is available using the following code:
 """
 bot.config = config
 
+# Commands
+@bot.command(name='inspire')
+async def inspire(ctx):
+    quote = get_quote()
+    await ctx.send(quote)
+  
 
+# Events
+  
 @bot.event
-async def on_ready() -> None:
+async def on_ready():
     """
     The code in this event is executed when the bot is ready.
     """
@@ -168,7 +180,7 @@ async def on_ready() -> None:
 
 
 @tasks.loop(minutes=1.0)
-async def status_task() -> None:
+async def status_task():
     """
     Setup the game status task of the bot.
     """
@@ -177,7 +189,7 @@ async def status_task() -> None:
 
 
 @bot.event
-async def on_message(message: discord.Message) -> None:
+async def on_message(message: discord.Message):
     """
     The code in this event is executed every time someone sends a message, with or without the prefix
 
@@ -189,7 +201,7 @@ async def on_message(message: discord.Message) -> None:
 
 
 @bot.event
-async def on_command_completion(context: Context) -> None:
+async def on_command_completion(context: Context):
     """
     The code in this event is executed every time a normal command has been *successfully* executed.
 
@@ -209,7 +221,7 @@ async def on_command_completion(context: Context) -> None:
 
 
 @bot.event
-async def on_command_error(context: Context, error) -> None:
+async def on_command_error(context: Context, error):
     """
     The code in this event is executed every time a normal valid command catches an error.
 
@@ -286,7 +298,7 @@ async def on_command_error(context: Context, error) -> None:
         raise error
 
 
-async def load_cogs() -> None:
+async def load_cogs():
     """
     The code in this function is executed whenever the bot will start.
     """
