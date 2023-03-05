@@ -9,7 +9,6 @@ python = "^3.10"
 aiohttp = "^3.8.4"
 aiosqlite = "^0.18.0"
 discord = "^2.2.2"
-requests = "^2.28.2"
 
 [tool.poetry.dev-dependencies]
 

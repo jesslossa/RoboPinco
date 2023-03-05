@@ -14,7 +14,6 @@ import os
 import platform
 import random
 import sys
-import requests
 
 import aiosqlite
 import discord
@@ -34,6 +33,7 @@ Setup bot intents (events restrictions)
 For more information about intents, please go to the following websites:
 https://discordpy.readthedocs.io/en/latest/intents.html
 https://discordpy.readthedocs.io/en/latest/intents.html#privileged-intents
+
 """
 
 intents = discord.Intents.default()
@@ -128,11 +128,6 @@ logger.addHandler(console_handler)
 logger.addHandler(file_handler)
 bot.logger = logger
 
-def get_quote():
-  response = requests.get("https://zenquotes.io/api/random")
-  json_data = json.loads(response.text)
-  quote = json_data[0]['q'] + " -" + json_data[0]['a']
-  return(quote)
 
 async def init_db():
     async with aiosqlite.connect(
@@ -155,13 +150,16 @@ The config is available using the following code:
 bot.config = config
 
 # Commands
+
 @bot.command(name='inspire')
 async def inspire(ctx):
     quote = get_quote()
     await ctx.send(quote)
-  
 
+
+  
 # Events
+
   
 @bot.event
 async def on_ready():
@@ -184,7 +182,7 @@ async def status_task():
     """
     Setup the game status task of the bot.
     """
-    statuses = ["with you!", "with Krypton!", "with humans!"]
+    statuses = ["with Pincos!", "with Molang!", "with Piu Piu!"]
     await bot.change_presence(activity=discord.Game(random.choice(statuses)))
 
 
